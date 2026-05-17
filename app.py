@@ -7,16 +7,25 @@ import time
 app = Flask(__name__)
 
 # =========================================
-# DISCORD WEBHOOK URL
+# WEBSITE SYSTEM CONTROL
+# =========================================
+
+SYSTEM_ACTIVE = True 
+
+# =========================================
+# VIP DAYS
+# CHANGE DAYS HERE
+# =========================================
+
+VIP_DAYS = 3
+
+# =========================================
+# DISCORD SETTINGS
 # =========================================
 
 WEBHOOK_URL = "https://discord.com/api/webhooks/1504755222306750496/mYvZ5FMo6K3THbhyCgUt9sbkVVkizZZZ36cd2RJ70BIlAzQur0Q9s7tufGU_61UlL2jb"
 
-# =========================================
-# APNI IMAGE LINK YAHAN LAGAO
-# =========================================
-
-DISCORD_IMAGE_URL = "https://i.imgur.com/aFN5vjO.jpeg"
+DISCORD_IMAGE_URL = "https://res.cloudinary.com/dui2c44p6/image/upload/v1779002265/auclo2ketmqxwldt89tx.png"
 
 # =========================================
 # UID DATABASE
@@ -41,17 +50,16 @@ def auto_expire():
             if current_time >= expire_time:
 
                 data = {
-                    "username": "AXD VIP SYSTEM",
+                    "username": "AXB VIP SYSTEM",
 
                     "avatar_url": DISCORD_IMAGE_URL,
 
                     "embeds": [
                         {
-                            "title": "⚠ VIP ACCESS EXPIRED",
+                            "title": "❌ VIP ACCESS EXPIRED",
 
                             "description":
-                            f"❌ VIP access expired for UID `{uid}`.\n\n"
-                            f"🔒 Renewal required to continue premium access.",
+                            "Premium access expired automatically.",
 
                             "color": 16711680,
 
@@ -60,8 +68,9 @@ def auto_expire():
                             },
 
                             "fields": [
+
                                 {
-                                    "name": "👤 USER UID",
+                                    "name": "🆔 UID",
                                     "value": f"`{uid}`",
                                     "inline": True
                                 },
@@ -70,20 +79,29 @@ def auto_expire():
                                     "name": "📌 STATUS",
                                     "value": "EXPIRED",
                                     "inline": True
+                                },
+
+                                {
+                                    "name": "🔒 ACCESS",
+                                    "value": "LOCKED",
+                                    "inline": True
                                 }
+
                             ],
 
                             "footer": {
-                                "text": "POWERED BY AXB • VIP SYSTEM"
+                                "text": "AXB PREMIUM SECURITY"
                             }
+
                         }
                     ]
                 }
 
                 try:
                     requests.post(WEBHOOK_URL, json=data)
-                except:
-                    pass
+
+                except Exception as e:
+                    print("WEBHOOK ERROR:", e)
 
                 remove_uids.append(uid)
 
@@ -108,7 +126,7 @@ HTML = """
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AXD VIP ACCESS</title>
+<title>AXB Premium</title>
 
 <style>
 
@@ -129,108 +147,85 @@ body{
 
     align-items:center;
 
-    overflow:hidden;
-
     background:
-    radial-gradient(circle at top left,#ff0000,#1a0000 35%),
-    radial-gradient(circle at bottom right,#ffcc00,#220000 40%),
-    linear-gradient(135deg,#240000,#120000,#330000);
-
-    animation:bgmove 8s infinite alternate;
-}
-
-@keyframes bgmove{
-
-    0%{
-        background-position:left top,right bottom;
-    }
-
-    100%{
-        background-position:right top,left bottom;
-    }
+    linear-gradient(135deg,#0a0a0f,#14141d,#1b1b24);
 }
 
 .container{
 
-    width:450px;
+    width:470px;
 
-    background:rgba(10,10,10,0.92);
+    background:#111111;
 
-    border-radius:30px;
+    border-radius:28px;
 
     padding:35px;
 
     text-align:center;
 
-    border:1px solid rgba(255,255,255,0.08);
-
-    backdrop-filter:blur(12px);
+    border:2px solid #a855f7;
 
     box-shadow:
-    0 0 25px rgba(255,0,0,0.25),
-    0 0 60px rgba(255,200,0,0.15);
+    0 0 25px rgba(168,85,247,0.35);
 }
 
 h1{
 
+    color:#c084fc;
+
+    font-size:48px;
+
+    margin-bottom:5px;
+
+    font-weight:bold;
+}
+
+.premium{
+
     color:white;
 
-    font-size:42px;
+    font-size:22px;
 
-    margin-bottom:10px;
+    margin-bottom:18px;
 
-    letter-spacing:2px;
-
-    text-shadow:
-    0 0 12px rgba(255,0,0,0.7),
-    0 0 25px rgba(255,200,0,0.4);
+    font-weight:600;
 }
 
 .subtitle{
 
-    color:#d4d4d4;
+    color:#cfcfcf;
 
-    margin-bottom:35px;
+    margin-bottom:30px;
 
-    font-size:15px;
+    font-size:14px;
+
+    line-height:24px;
 }
 
 .label{
 
-    color:#ffffff;
+    color:white;
 
     text-align:left;
 
     margin-bottom:10px;
+
+    font-size:14px;
 
     font-weight:bold;
 }
 
 .input-box{
 
-    display:flex;
-
-    align-items:center;
-
     background:rgba(255,255,255,0.05);
 
-    border:1px solid rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.1);
 
-    border-radius:15px;
+    border-radius:14px;
 
-    padding:14px;
+    padding:15px;
 
     margin-bottom:25px;
-
-    transition:0.3s;
-}
-
-.input-box:hover{
-
-    border:1px solid rgba(255,0,0,0.5);
-
-    box-shadow:
-    0 0 20px rgba(255,0,0,0.3);
 }
 
 .input-box input{
@@ -249,7 +244,8 @@ h1{
 }
 
 .input-box input::placeholder{
-    color:#888;
+
+    color:#999;
 }
 
 .btn{
@@ -260,96 +256,118 @@ h1{
 
     border:none;
 
-    border-radius:18px;
+    border-radius:15px;
 
     background:
-    linear-gradient(90deg,#ff0000,#ff9900,#ff0000);
+    linear-gradient(90deg,#7b2ff7,#ffffff,#7b2ff7);
 
-    background-size:300% 300%;
+    color:#111;
 
-    color:white;
-
-    font-size:22px;
+    font-size:20px;
 
     font-weight:bold;
 
     cursor:pointer;
-
-    transition:0.3s;
-
-    animation:gradientmove 4s infinite;
-}
-
-@keyframes gradientmove{
-
-    0%{
-        background-position:0% 50%;
-    }
-
-    50%{
-        background-position:100% 50%;
-    }
-
-    100%{
-        background-position:0% 50%;
-    }
 }
 
 .btn:hover{
 
-    transform:scale(1.03);
+    opacity:0.95;
+}
+
+.lock-box{
+
+    margin-top:20px;
+
+    background:
+    linear-gradient(145deg,#1a0000,#2a0000);
+
+    border:1px solid rgba(255,0,0,0.25);
+
+    padding:25px;
+
+    border-radius:18px;
+
+    color:white;
 
     box-shadow:
-    0 0 20px rgba(255,0,0,0.5),
-    0 0 40px rgba(255,200,0,0.3);
+    0 0 20px rgba(255,0,0,0.15);
+}
+
+.lock-title{
+
+    font-size:24px;
+
+    color:#ff4d4d;
+
+    font-weight:bold;
+
+    margin-bottom:10px;
+}
+
+.lock-sub{
+
+    color:#ffb3b3;
+
+    font-size:15px;
+
+    line-height:24px;
 }
 
 .powered{
 
-    margin-top:20px;
+    margin-top:18px;
 
-    font-size:22px;
+    font-size:12px;
 
-    font-weight:bold;
+    color:#aaaaaa;
 
-    color:#ffcc00;
-
-    letter-spacing:4px;
-
-    text-shadow:
-    0 0 10px rgba(255,200,0,0.7);
+    letter-spacing:2px;
 }
 
 .status-box{
 
     margin-top:20px;
 
-    background:rgba(255,255,255,0.05);
+    background:rgba(0,255,0,0.08);
 
-    border:1px solid rgba(255,255,255,0.08);
+    border:1px solid rgba(0,255,0,0.2);
 
-    padding:15px;
+    padding:14px;
 
-    border-radius:15px;
+    border-radius:12px;
 
-    color:white;
+    color:#8cff8c;
 
-    font-size:18px;
+    font-size:16px;
 }
 
 .error-box{
 
     margin-top:20px;
 
-    background:rgba(255,0,0,0.12);
+    background:rgba(255,0,0,0.08);
 
-    border:1px solid rgba(255,0,0,0.25);
+    border:1px solid rgba(255,0,0,0.2);
 
-    padding:15px;
+    padding:14px;
 
-    border-radius:15px;
+    border-radius:12px;
 
-    color:#ff6666;
+    color:#ff8080;
+
+    font-size:15px;
+}
+
+.copy-btn{
+
+    margin-left:8px;
+
+    cursor:pointer;
+
+    color:#c084fc;
+
+    font-size:15px;
 }
 
 </style>
@@ -360,18 +378,27 @@ h1{
 
 <div class="container">
 
-<h1>AXD VIP</h1>
+<h1>AXB</h1>
+
+<div class="premium">
+Premium
+</div>
+
+{% if system_active %}
 
 <div class="subtitle">
-Enter your UID to activate VIP Access
+Enter your UID below<br>
+to unlock premium access
 </div>
 
 <form method="POST">
 
-<div class="label">UID NUMBER</div>
+<div class="label">
+Enter Your UID
+</div>
 
 <div class="input-box">
-<input type="text" name="uid" placeholder="Enter your UID">
+<input type="text" name="uid" placeholder="Enter UID Here">
 </div>
 
 <button class="btn" type="submit">
@@ -380,15 +407,36 @@ CLAIM ACCESS
 
 </form>
 
+{% else %}
+
+<div class="lock-box">
+
+<div class="lock-title">
+🔒 WEBSITE LOCKED
+</div>
+
+<div class="lock-sub">
+Premium Access Is Temporarily Disabled
+</div>
+
+</div>
+
+{% endif %}
+
 <div class="powered">
-POWERED BY AXB
+Powered By AXB
 </div>
 
 {% if success %}
 
 <div class="status-box">
 
-✅ UID <strong>{{uid}}</strong> Activated Successfully
+✅ UID
+<strong id="uidText">{{uid}}</strong>
+
+<span class="copy-btn" onclick="copyUID()">📋</span>
+
+Activated Successfully
 
 </div>
 
@@ -398,13 +446,26 @@ POWERED BY AXB
 
 <div class="error-box">
 
-❌ THIS UID HAS ALREADY BEEN USED
+❌ This UID Has Already Been Used
 
 </div>
 
 {% endif %}
 
 </div>
+
+<script>
+
+function copyUID(){
+
+    const uid = document.getElementById("uidText").innerText;
+
+    navigator.clipboard.writeText(uid);
+
+    alert("UID Copied");
+}
+
+</script>
 
 </body>
 </html>
@@ -423,7 +484,7 @@ def home():
     error = False
     uid = None
 
-    if request.method == "POST":
+    if request.method == "POST" and SYSTEM_ACTIVE:
 
         uid = request.form.get("uid")
 
@@ -437,51 +498,40 @@ def home():
 
                 success = True
 
-                expire_time = datetime.now() + timedelta(days=1)
+                expire_time = datetime.now() + timedelta(days=VIP_DAYS)
 
                 uids_data[uid] = expire_time
 
                 expire_date = expire_time.strftime("%d-%m-%Y %H:%M:%S")
 
                 # =========================================
-                # DISCORD VIP EMBED
+                # DISCORD WEBHOOK
                 # =========================================
 
                 data = {
-                    "username": "AXD VIP SYSTEM",
+                    "username": "AXB VIP SYSTEM",
 
                     "avatar_url": DISCORD_IMAGE_URL,
 
                     "embeds": [
                         {
 
-                            "title": "🔥 VIP ACCESS ",
+                            "title": "💎 VIP ACCESS ACTIVATED",
 
                             "description":
-                            f"✨ VIP access activated successfully.\n\n"
-                            f"👑 Premium access granted for UID `{uid}`.",
+                            "A new premium user has been activated successfully.",
 
-                            "color": 16753920,
+                            "color": 10494192,
 
                             "thumbnail": {
-                                "url": DISCORD_IMAGE_URL
-                            },
-
-                            "image": {
                                 "url": DISCORD_IMAGE_URL
                             },
 
                             "fields": [
 
                                 {
-                                    "name": "👤 USER UID",
+                                    "name": "🆔 UID",
                                     "value": f"`{uid}`",
-                                    "inline": True
-                                },
-
-                                {
-                                    "name": "⚡ ACCESS",
-                                    "value": "VIP PREMIUM",
                                     "inline": True
                                 },
 
@@ -492,8 +542,14 @@ def home():
                                 },
 
                                 {
-                                    "name": "📅 VALIDITY",
-                                    "value": "1 DAY ACCESS",
+                                    "name": "👑 ACCESS",
+                                    "value": "PREMIUM VIP",
+                                    "inline": True
+                                },
+
+                                {
+                                    "name": "📅 ACTIVE DAYS",
+                                    "value": f"{VIP_DAYS} DAYS",
                                     "inline": True
                                 },
 
@@ -505,13 +561,8 @@ def home():
 
                             ],
 
-                            "author": {
-                                "name": "AXB  BYPASS  SYSTEM",
-                                "icon_url": DISCORD_IMAGE_URL
-                            },
-
                             "footer": {
-                                "text": "POWERED BY AXB • PREMIUM ACCESS"
+                                "text": "AXB PREMIUM SECURITY"
                             }
 
                         }
@@ -519,15 +570,22 @@ def home():
                 }
 
                 try:
-                    requests.post(WEBHOOK_URL, json=data)
-                except:
-                    pass
+
+                    requests.post(
+                        WEBHOOK_URL,
+                        json=data
+                    )
+
+                except Exception as e:
+
+                    print("DISCORD ERROR:", e)
 
     return render_template_string(
         HTML,
         success=success,
         error=error,
-        uid=uid
+        uid=uid,
+        system_active=SYSTEM_ACTIVE
     )
 
 # =========================================
@@ -535,4 +593,5 @@ def home():
 # =========================================
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+
+    app.run(host="0.0.0.0", port=5059)
