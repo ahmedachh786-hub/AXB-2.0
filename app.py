@@ -10,7 +10,7 @@ app = Flask(__name__)
 # WEBSITE SYSTEM CONTROL
 # =========================================
 
-SYSTEM_ACTIVE = False 
+SYSTEM_ACTIVE = True 
 
 # =========================================
 # VIP DAYS
