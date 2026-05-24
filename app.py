@@ -17,7 +17,7 @@ SYSTEM_ACTIVE = True
 # CHANGE DAYS HERE
 # =========================================
 
-VIP_DAYS = 30
+VIP_DAYS = 1
 
 # =========================================
 # DISCORD SETTINGS
